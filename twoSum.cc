@@ -130,7 +130,7 @@ int binary_search_pair(std::vector<std::pair<int, int>> x, int left, int right, 
             left = mid + 1;
             // if target may be not in x[], open this commment
             if (left == right) {
-                if (x[left] == target) {
+                if (x[left].first == target) {
                     return x[mid].second;
                 } else {
                     return -1;
@@ -237,7 +237,7 @@ int main(int argc, char* argv[]){
 
     // test two_sum
     std::vector<int> num1({0, 2, 11, 7, 8, 4, 15});
-    auto res1 = two_sum(num1, 14);
+    auto res1 = two_sum(num1, 9);
     std::cout << "res1 is: " << std::endl;
     for (auto & t: res1){
         std::cout << t << std::endl;
