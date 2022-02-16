@@ -100,7 +100,7 @@ void quick_sort_v2_pair(std::vector<std::pair<int, int>> &x, int left, int right
 
 // binary_search !!! target must be in x[]
 int binary_search(std::vector<int> & x, int left, int right, int target ){
-    while(left < right) {
+    while(left <= right) {
         int mid = left + (right - left) / 2;
         if (x[mid] == target) {
             return mid;
@@ -115,14 +115,14 @@ int binary_search(std::vector<int> & x, int left, int right, int target ){
                 }
             }
         } else {
-            right = mid;
+            right = mid - 1;
         }
     }
     return -1;        
 }
 // !!! target must be in x[]
 int binary_search_pair(std::vector<std::pair<int, int>> x, int left, int right, int target) {
-    while (left < right) {
+    while (left <= right) {
         int mid = left + (right - left) / 2;
         if (x[mid].first == target) {
             return x[mid].second;
@@ -137,7 +137,7 @@ int binary_search_pair(std::vector<std::pair<int, int>> x, int left, int right, 
                 }
             }
         } else {
-            right = mid;
+            right = mid - 1;
         }
     }
     return -1;
