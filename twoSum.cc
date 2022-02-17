@@ -98,6 +98,49 @@ void quick_sort_v2_pair(std::vector<std::pair<int, int>> &x, int left, int right
     quick_sort_v2_pair(x, i + 1, right);
 }
 
+int bound_low(std::vector<int> x, int first, int last, int target) {
+    int count = last - first;
+    int step = 0;
+    int it = 0;
+    while (count > 0) {
+        step = count >> 1;
+        it += step;
+        if (x[it] < target) {
+            first = ++it;
+            count -= step + 1;
+        }
+        count = step;
+    }
+    return first;
+}
+int bound_low(std::vector<std::pair<int, int>> x, int first, int last, int target) {
+    int count = last - first;
+    int step = 0;
+    int it = 0;
+    while (count > 0) {
+        it = first;
+        step = count >> 1;
+        it += step;
+        if (x[it].first < target) {
+            first = ++it;
+            count -= step + 1;
+        }
+        count = step;
+    }
+    return first;
+}
+
+int binary_search(std::vector<int> x, int first, int last, int target) {
+    int res = bound_low(x, first, last, target);
+    if (res < 0 || res >= last || x[res] != target) return -1;
+    return res;
+}
+
+int binary_search_v2(std::vector<std::pair<int, int>> x, int first, int last, int target) {
+    int res = bound_low(x, first, last, target);
+    if (res < 0 || res >= last || x[res].first != target) return -1;
+    return x[res].second;
+}
 // binary_search !!! target must be in x[]
 int binary_search(std::vector<int> & x, int left, int right, int target ){
     while(left <= right) {
@@ -120,8 +163,7 @@ int binary_search(std::vector<int> & x, int left, int right, int target ){
     }
     return -1;        
 }
-// !!! target must be in x[]
-int binary_search_pair(std::vector<std::pair<int, int>> x, int left, int right, int target) {
+int binary_search(std::vector<std::pair<int, int>> x, int left, int right, int target) {
     while (left <= right) {
         int mid = left + (right - left) / 2;
         if (x[mid].first == target) {
@@ -153,7 +195,8 @@ std::vector<int> two_sum_v2(std::vector<int> nums, int target){
     //sort
     quick_sort_v2_pair(nums_index, 0, nums_index.size()-1);
     for (i = 0; i < nums.size(); ++i) {
-        int target_index = binary_search_pair(nums_index, 0, nums_index.size()-1, target-nums[i]);
+        //int target_index = binary_search(nums_index, 0, nums_index.size()-1, target-nums[i]);
+        int target_index = binary_search_v2(nums_index, 0, nums_index.size(), target-nums[i]);
         if (target_index != -1) {
             if (i < target_index) {
                 res.push_back(i);
