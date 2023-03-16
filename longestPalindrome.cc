@@ -20,6 +20,7 @@ out_type convert(const input_type &t) {
 
 std::string preprocess(const std::string str) {
     std::string res;
+    res.push_back('$');
     for (auto &k : str) {
         res.push_back('#');
         res.push_back(k);
@@ -27,6 +28,51 @@ std::string preprocess(const std::string str) {
     res.push_back('#');
     return res;
 }
+
+static int min(int x, int y) {
+    return x > y ? y : x;
+}
+
+std::string longPalindrome_dp3(const std::string str) {
+    auto s1 = preprocess(str);
+    int len = s1.size();
+    std::vector<int> P(len, 0);
+    int mx = 0, id = 0;
+    for (int i = 1; i < len; ++i) {
+        P[i] = mx > i ? min(P[2 * id - i], mx - i): 1;
+        while (s1[i + P[i]] == s1[i - P[i]]) P[i]++;
+        if (mx < i + P[i]) {
+            mx = i + P[i];
+            id = i;
+        }
+    }
+    id = 0;
+    for (int i = 1; i < len; ++i) {
+        if (id < P[i])  id = i;
+    }
+    return str.substr((id - P[id])/2, P[id] - 1);
+    //return str.substr((id - 1/2), P[id]/2);
+}
+
+std::string longPalindrome_dp2(const std::string str) {
+    int M = str.size();
+    std::vector<std::vector<int> > dp(M, std::vector<int>(M, 0));
+    int left,  max_len = 0;
+    for (int i = M-1; i >= 0; --i) {
+        for (int j = i; j < M ; ++j) {
+            // || , when first is true, return 1
+            dp[i][j] = str[i] == str[j] && (j - i < 2 || dp[i + 1][j - 1]);
+            if (dp[i][j]) {
+                if (max_len < j - i + 1) {
+                    max_len = j - i + 1;
+                    left = i;
+                }
+            }
+        }
+    }
+    return str.substr(left, max_len);
+}
+
 
 //resolution1: dynamic programing
 std::string  longPalindrome_dp(const std::string str) {
@@ -88,7 +134,8 @@ std::string longPalindrome_center_extend(const std::string str) {
 int main(int argc, char* argv[]){
     std::vector<std::string> vec_str;
     unsigned int ind = 0;
-    vec_str.emplace_back("ab");
+    //vec_str.emplace_back("ab");
+    vec_str.emplace_back("12212321");
     vec_str.emplace_back("fabcddcbae");
     vec_str.emplace_back("mmsgbg");
     vec_str.emplace_back("gabaf");
@@ -96,6 +143,8 @@ int main(int argc, char* argv[]){
     for (auto &k : vec_str){        
         std::cout << "input: " << k << std::endl;
         std::cout << "[dp] out: " << longPalindrome_dp(k) << std::endl;
+        std::cout << "[dp2] out: " << longPalindrome_dp2(k) << std::endl;
+        std::cout << "[dp3] out: " << longPalindrome_dp3(k) << std::endl;
         //std::cout << preprocess(k) << std::endl;
         std::cout << "[center_extend] out: " << longPalindrome_center_extend(k) << std::endl;
     }
