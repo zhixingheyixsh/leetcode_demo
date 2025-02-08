@@ -34,22 +34,17 @@ std::vector<int> two_sum(std::vector<int> &nums, int target){
 // divide into two steps: quick_sort, binary_search
 
 void quick_sort_v1(std::vector<int> &data, int left, int right) {
-	if (left > right)	return;
+	if (left >= right)	return;
 	int i = left;
 	int j = right;
-	int base = data[left];
+	int base = data[left]; //select the left pivot
 	int tmp = 0;
-	while (i < j)
-	{
+	while (i < j) {
 		while (data[j] >= base && i < j)	j--;
 		while (data[i] <= base && i < j)	i++;
-		if (i < j) {
-			tmp = data[i];
-			data[i] = data[j];
-			data[j] = tmp;
-		}
+		if (i < j) std::swap(data[i], data[j]);
 	}
-	data[left] = data[i];
+	data[left] = data[i]; //put  the pivot to the right position
 	data[i] = base;
 	quick_sort_v1(data, left, i - 1);
 	quick_sort_v1(data, i + 1, right);
@@ -57,21 +52,14 @@ void quick_sort_v1(std::vector<int> &data, int left, int right) {
 
 void quick_sort_v2(std::vector<int> &x, int left, int right){
     //select the right pivotal
-    if (left > right) return;
+    if (left >= right) return;
     int i = left - 1;
     int temp = 0;
     for (int k = left; k < right; ++k){
-        if (x[k] < x[right]) {
-            //swap
-            temp = x[++i];
-            x[i] = x[k];
-            x[k] = temp;
-        }
+        if (x[k] < x[right]) std::swap(x[k], x[++i]);
     }
     // swap pivotal
-    temp = x[++i];
-    x[i] = x[right];
-    x[right] = temp;
+    std::swap(x[++i], x[right]);
     quick_sort_v2(x, left, i - 1);
     quick_sort_v2(x, i + 1, right);
 
@@ -252,7 +240,6 @@ int main(int argc, char* argv[]){
     std::cout << "\ninput data :" << std::endl;
     unsigned int ind = 0;
     // test quick_sort
-    /*
     for (auto &k: num2){
         ind++;
         k = rand() % range;
@@ -272,7 +259,6 @@ int main(int argc, char* argv[]){
     bool v2_is_right = diff_two_vector(res0, res2);
     std::cout << "\n\n\nv1 is :" << v1_is_right << std::endl;
     std::cout << "v2 is :" << v2_is_right << std::endl;
-    */
     
     //for (auto k : res){
     //    std::cout << k << std::endl;
@@ -280,14 +266,14 @@ int main(int argc, char* argv[]){
 
     // test two_sum
     std::vector<int> num1({0, 2, 11, 7, 8, 4, 15});
-    auto res1 = two_sum(num1, 9);
-    std::cout << "res1 is: " << std::endl;
-    for (auto & t: res1){
+    auto res4 = two_sum(num1, 9);
+    std::cout << "tow sum res4 is: " << std::endl;
+    for (auto & t: res4){
         std::cout << t << std::endl;
     }
-    auto res2 = two_sum_v2(num1, 9);
-    std::cout << "res2 is: " << std::endl;
-    for (auto & t: res2){
+    auto res5 = two_sum_v2(num1, 9);
+    std::cout << "two sum res5 is: " << std::endl;
+    for (auto & t: res5){
         std::cout << t << std::endl;
     }
     return 0;
